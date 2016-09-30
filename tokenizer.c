@@ -154,32 +154,32 @@ void reportError(char* token, char c){ //function to report an error, basically 
         printf("malformed: %s, error on: [0x%x]\n", token, c);
 }
 
-void reportEscape(char* token, int position){
-        char* newTokenEscape = malloc(position);
+void reportEscape(char* token, int position){ //splits a token that contains an escape character and sends each part through the FSM
+        char* newTokenEscape = malloc(position); //space for the bit before the escape character
         int i;
-        for (i = 0; i != position; i++) {
+        for (i = 0; i != position; i++) {//add the non escape characters to the new token
                 newTokenEscape[i] = token[i];
         }
-        newTokenEscape[position] = '\0';
-        state_initial(newTokenEscape, 0);
-        free(newTokenEscape);
+        newTokenEscape[position] = '\0'; //add the null byte to the end of the new token
+        state_initial(newTokenEscape, 0); //send the new token throught the FSM
+        free(newTokenEscape); //we don't need it anymore, so free it
 
-        char* reportEscapeChar = malloc(2);
-        reportEscapeChar[0] = token[position];
-        reportEscapeChar[1] = '\0';
-        reportType(reportEscapeChar, 'e');
-        free(reportEscapeChar);
+        char* reportEscapeChar = malloc(2); //small chunck of memory for the escape char, allocated 2 because it is used as a string, hence 1 byte for the caracter, one for the null byte
+        reportEscapeChar[0] = token[position]; //copy the escape character
+        reportEscapeChar[1] = '\0'; //add the null byte to make it look like a string
+        reportType(reportEscapeChar, 'e'); //report the type of the escape character
+        free(reportEscapeChar); //free up the allocated memory
 
-        char* newTokenEscapeTwo = malloc(strlen(token) - position);
+        char* newTokenEscapeTwo = malloc(strlen(token) - position); //create a new sopce for the second half of the token
         i = position+1;
         int j = 0;
-        while (i != strlen(token)) {
+        while (i != strlen(token)) { //copy the remaining parts of the token over
                 newTokenEscapeTwo[j] = token[i];
                 j++;
                 i++;
         }
-        state_initial(newTokenEscapeTwo, 0);
-        free(newTokenEscapeTwo);
+        state_initial(newTokenEscapeTwo, 0); //send this new token throught the FSM
+        free(newTokenEscapeTwo); //free up the space
 }
 
 int state_initial(char* token, int position){ //initial setting of the FSM
@@ -195,7 +195,7 @@ int state_initial(char* token, int position){ //initial setting of the FSM
 }
 
 /* the following functions are all part of the FSM
- * processZero functiosn relate to processing tokens that start with 0
+ * processZero functions relate to processing tokens that start with 0
  * processOnetoNine functions relate to processing tokens that start with 1-9
  * the number after the _ is the number that is labeled in the FSM diagram in readme.pdf
  */
