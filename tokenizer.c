@@ -150,32 +150,6 @@ void reportType(char* token, char type){ //function to report the result of the 
         }
 }
 
-char* splitToken (char* token, char c){
-        char * temp = malloc(strlen(token)); //create a temp char var that will be set as the user input
-        strcpy(temp, token); //copy the value over to temp
-        char * nextToken = malloc(2); //allcated space for a single char that is to be returned
-        int i; //counter for following loop
-        if (isEscape(token[0]) > 0) {
-                nextToken[0] = token[0];
-                token++;
-                return nextToken;
-        } else {
-                for (i = 0; isEscape(temp[i]) < 0; i++) { //loop over the length of the temp string until an escape is hit
-                        if (temp[i] == '\0') { //if there is a null byte, exit the loop
-                                break;
-                        }
-                        nextToken = realloc(nextToken, (2*(i+1))); //realloc to make room for one more character
-                        nextToken[i] = temp [i]; //set the current position as the new character from input string
-                        nextToken[i+1] = '\0'; //set the last spot of the string as the null byte
-                        token++; // pointer arithmatic, now points to the next character in the string
-                }
-                if (strlen(nextToken) == 0) { //final check to see if after removing all whitespace, the string is empty
-                        return 0;
-                }
-                return nextToken;
-        }
-}
-
 void reportError(char* token, char c){ //function to report an error, basically just malformed token
         printf("malformed: %s, error on: [0x%x]\n", token, c);
 }
