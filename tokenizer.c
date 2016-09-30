@@ -151,15 +151,34 @@ void reportType(char* token, char type){ //function to report the result of the 
 }
 
 void reportError(char* token, char c){ //function to report an error, basically just malformed token
-        printf("malformed: %s\n", token);
+        printf("malformed %s\n", token);
 }
 
 void reportEscape(char* token, int position){ //splits a token that contains an escape character and sends each part through the FSM
-        if(strlen(token) == 1) {
-                reportType(token, 'e');
+        int i;
+        int isAllEscape = 0;
+        for(i = 0; token[i] != '\0'; i++) {
+                if (isEscape(token[i])) {
+                        continue;
+                } else {
+                        isAllEscape = 1;
+                        break;
+                }
+        }
+        if(isAllEscape == 0) {
+                char* escapeToken = malloc(2);
+                escapeToken[1] = '\0';
+                for (i = 0; token[i] != '\0'; i++) {
+                        escapeToken[0] = token[i];
+                        if (isEscape(escapeToken[0]) == -1) {
+                                reportType(escapeToken, 'e');
+                        } else if (isEscape(escapeToken[0]) == 1) {
+                                reportError(escapeToken, escapeToken[0]);
+                        }
+                }
+                free(escapeToken);
         } else {
                 char* newTokenEscape = malloc(position); //space for the bit before the escape character
-                int i;
                 for (i = 0; i != position; i++) {//add the non escape characters to the new token
                         newTokenEscape[i] = token[i];
                 }
