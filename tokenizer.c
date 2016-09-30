@@ -151,7 +151,7 @@ void reportType(char* token, char type){ //function to report the result of the 
 }
 
 void reportError(char* token, char c){ //function to report an error, basically just malformed token
-        printf("malformed: %s, error on: [0x%x]\n", token, c);
+        printf("malformed: %s\n", token);
 }
 
 void reportEscape(char* token, int position){ //splits a token that contains an escape character and sends each part through the FSM
